@@ -1,5 +1,3 @@
-package draft;
-
 import java.io.FileNotFoundException;
 
 public class GreedyGnomesProblem {
@@ -64,7 +62,7 @@ public class GreedyGnomesProblem {
         int mat[][] = { { 1, 2, 3 },
                         { 4, 5, 6 } };
 
-        String mat1[][] = { { "0", "3", "X", "5", "0"},
+        String mat1[][] = { { "0", "3", "0", "5", "0"},
                             { "1", "0", "6", "8", "0"},
                             { "2", "3", "0", "9", "0"},
                             { "0", "8", "6", "0", "0"},
