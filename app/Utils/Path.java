@@ -98,6 +98,7 @@ public class Path {
             }
         }
         System.out.println();
+        System.out.println(path);
         System.out.println("Golds: " + maxGolds + " | " + "Steps: " + minSteps);
         return path;
     }
