@@ -39,25 +39,41 @@ public class Path {
 
     // public static printGoldsAndSteps(ArrayList<Pair>)
 
-    public static ArrayList<Pair> getMinimalPathHasMaxGolds(List<ArrayList<Pair>> allPathsHaveMaxGolds){
-        ArrayList<Pair> path = allPathsHaveMaxGolds.get(0);
-        Integer minSteps = path.size();
+    // public static ArrayList<Pair> getMinimalPathHasMaxGolds(List<ArrayList<Pair>> allPathsHaveMaxGolds){
+    //     ArrayList<Pair> path = allPathsHaveMaxGolds.get(0);
+    //     Integer minSteps = path.size();
 
-        // for(ArrayList<Pair> pathHaveMaxGolds : allPathsHaveMaxGolds){
-        for(int i = 1; i <= allPathsHaveMaxGolds.size() - 1; i++){
-            // Pair last = pathHaveMaxGolds.get(pathHaveMaxGolds.size() - 1);
-            // Pair first = pathHaveMaxGolds.get(0);
-            // int steps = (last.x - first.x) + (last.y - first.y) + 1;
-            int steps = allPathsHaveMaxGolds.get(i).size();
-            if(steps < minSteps){
-                path = allPathsHaveMaxGolds.get(i);
+    //     for(int i = 1; i <= allPathsHaveMaxGolds.size() - 1; i++){
+    //         int steps = allPathsHaveMaxGolds.get(i).size();
+    //         if(steps < minSteps){
+    //             path = allPathsHaveMaxGolds.get(i);
+    //         }
+    //     }
+    //     System.out.println(minSteps);
+    //     return path;
+    // }
+
+    public static void printDirection(ArrayList<Pair> array) {
+        ArrayList<String> path = new ArrayList<String>();
+        Pair prevPair = array.get(0);
+
+        for (int i = 1; i < array.size(); i++) {
+            Pair curPair = array.get(i);
+            if (curPair.x > prevPair.x) {
+                path.add("D");
+                prevPair = curPair;
+            } else if (curPair.y > prevPair.y) {
+                path.add("R");
+                prevPair = curPair;
             }
         }
-        return path;
+        System.out.println(path);
+        System.out.println();
+
     }
 
     /* OK */
-    public static List<ArrayList<Pair>> getPathsHaveMaxGold(List<ArrayList<Pair>> myPathList, int[][] grid){
+    public static ArrayList<Pair> getResult(List<ArrayList<Pair>> myPathList, int[][] grid){
         List<ArrayList<Pair>> allPathsHaveMaxGolds = new ArrayList<ArrayList<Pair>>();
         Integer maxGolds = 0;
 
@@ -70,7 +86,20 @@ public class Path {
                 maxGolds = getSumGoldsOfPath(eachPath, grid);
             } 
         }
-        return allPathsHaveMaxGolds;
+
+        // get the first path in path list above
+        ArrayList<Pair> path = allPathsHaveMaxGolds.get(0);
+        Integer minSteps = path.size();
+
+        for(int i = 1; i <= allPathsHaveMaxGolds.size() - 1; i++){
+            int steps = allPathsHaveMaxGolds.get(i).size();
+            if(steps < minSteps){
+                path = allPathsHaveMaxGolds.get(i);
+            }
+        }
+        System.out.println();
+        System.out.println("Golds: " + maxGolds + " | " + "Steps: " + minSteps);
+        return path;
     }
 
     /* OK */

@@ -80,12 +80,12 @@ public class ExhaustiveSearch {
 
     public static void main(String[] args) throws IOException{
 
-        String[][] map = Map.parseMap("./app/maps/12_23.txt");
+        String[][] map = Map.parseMap("./app/maps/10_10.txt");
         int[][] intMap = parseIntMap(map);
         Map.displayMap(map);
         findPath(map);
         
         List<ArrayList<Pair>> myPathList = Path.convertStringPathToList(pathList);
-        System.out.println(Path.getMinimalPathHasMaxGolds(Path.getPathsHaveMaxGold(myPathList, intMap)));
+        Path.printDirection(Path.getResult(myPathList, intMap));
     }
 }
