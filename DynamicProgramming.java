@@ -1,18 +1,19 @@
 import java.io.FileReader;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.io.IOException;
 import java.io.BufferedReader;
 
 public class DynamicProgramming {
 
-    public static int findMaxPath(int[][] mat) {
+    public static int[][] findMaxPath(int[][] mat) {
         int rows = mat.length;
         int cols = mat[0].length;
         int rock = -1;
 
         // base code to check null
         if (rows == 0) {
-            return 0;
+            return new int[0][0];
         }
 
         // create a Dynamic Programming matrix with same size as original matrix
@@ -62,14 +63,51 @@ public class DynamicProgramming {
             }
         }
 
-        System.out.println(" ");
-        System.out.println(Arrays.deepToString(dp).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
+        // return filled dp matrix
+        return dp;
+    }
 
-        // if (mat[rows - 1][cols - 1] == rock) {
-        // dp[rows - 1][cols - 1] += 1;
-        // }
+    public static class Pair {
+        Integer x, y;
 
-        return dp[rows - 1][cols - 1];
+        public Pair() {
+        }
+
+        public Pair(Integer x, Integer y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public Integer getX() {
+            return x;
+        }
+
+        public Integer getY() {
+            return y;
+        }
+
+        public String toString() {
+            return x + "," + y + " ";
+        }
+    }
+
+    public static Pair findMaxCord(int[][] mat) {
+
+        int max = mat[0][0];
+
+        Pair maxCord = new Pair();
+
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[i].length; j++) {
+                if (mat[i][j] >= max) {
+                    max = mat[i][j];
+                    maxCord.x = i;
+                    maxCord.y = j;
+                }
+            }
+        }
+
+        return maxCord;
     }
 
     public static String[][] parseMap(String fileName) throws IOException {
@@ -104,9 +142,7 @@ public class DynamicProgramming {
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 mat[i][j] = Integer.parseInt(map[i][j]);
-
             }
-            System.out.println();
         }
         return mat;
     }
@@ -121,14 +157,62 @@ public class DynamicProgramming {
         }
     }
 
+    public static void printPath(Pair maxCord, int[][] mat) {
+        int i = maxCord.x, j = maxCord.y;
+        System.out.println("Golds: " + mat[i][j]);
+        ArrayList<Pair> pathCord = new ArrayList<>();
+
+        pathCord.add(new Pair(i, j));
+        while (i > 0 && j > 0) {
+            if (mat[i - 1][j] >= mat[i][j - 1]) {
+                pathCord.add(new Pair(i - 1, j));
+                i -= 1;
+            } else {
+                pathCord.add(new Pair(i, j - 1));
+                j -= 1;
+            }
+        }
+        pathCord.add(new Pair(0, 0));
+        reverseArrayList(pathCord);
+
+        System.out.println("Steps: " + pathCord.size());
+        printDirection(pathCord);
+    }
+
+    public static void printDirection(ArrayList<Pair> array) {
+        ArrayList<String> path = new ArrayList<String>();
+        Pair prevPair = array.get(0);
+
+        for (int i = 1; i < array.size(); i++) {
+            Pair curPair = array.get(i);
+            if (curPair.x > prevPair.x) {
+                path.add("D");
+                prevPair = curPair;
+            } else if (curPair.y > prevPair.y) {
+                path.add("R");
+                prevPair = curPair;
+            }
+        }
+
+        System.out.println(path);
+    }
+
+    public static ArrayList<Pair> reverseArrayList(ArrayList<Pair> array) {
+        Collections.reverse(array);
+        return array;
+    }
+
     public static void main(String[] args) {
         try {
-            String[][] map = parseMap("3_3.txt");
+            String[][] map = parseMap("25_8.txt");
             int[][] mat = parseIntMap(map);
-            displayMat(mat);
 
-            System.out.println(Arrays.deepToString(mat).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
-            System.out.println(findMaxPath(mat));
+            // start time
+            int[][] dp = findMaxPath(mat);
+            Pair maxCord = findMaxCord(dp);
+            printPath(maxCord, dp);
+
+            // end time
         } catch (IOException e) {
             System.out.println(e);
             e.printStackTrace();

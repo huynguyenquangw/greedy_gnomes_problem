@@ -14,6 +14,7 @@ public class GreedyGnomesProblem {
         int cols = grid[0].length;
 
         String rock = "-1";
+
         // return last cell
         if (i == rows - 1 && j == cols - 1 && !grid[i][j].equals("-1")) {
             return Integer.parseInt(grid[i][j]);
