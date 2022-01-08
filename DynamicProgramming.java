@@ -1,109 +1,63 @@
-import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.io.IOException;
+import java.io.BufferedReader;
 
-public class MaxPathSum {
+public class DynamicProgramming {
 
-    public static int minPathSum(int[][] grid) {
-        if (grid == null || grid.length == 0) {
-            return 0;
-        }
-
-        int m = grid.length;
-        int n = grid[0].length;
-
-        int[][] dp = new int[m][n];
-        dp[0][0] = grid[0][0];
-
-        // initialize top row
-        for (int i = 1; i < n - 1; i++) {
-            dp[0][i] = dp[0][i - 1] + grid[0][i];
-        }
-
-        // initialize left column
-        for (int j = 1; j < m - 1; j++) {
-            dp[j][0] = dp[0][j - 1] + grid[j][0];
-        }
-
-        // fill up the dp table
-        for (int i = 1; i < m - 1; i++) {
-            for (int j = 1; j < n - 1; j++) {
-
-                if (dp[i + 1][j] > dp[i][j + 1]) {
-                    dp[i][j] = dp[i + 1][j] + grid[i][j];
-                } else {
-                    dp[i][j] = dp[i][j + 1] + grid[i][j];
-                }
-            }
-        }
-        return dp[m - 1][n - 1];
-    }
-
-    // public static int maxPathSum(int[][] mat, int row, int col) {
-    // if (mat == null || mat.length == 0) {
-    // return 0;
-    // }
-
-    // int[][] dp = new int[row][col];
-
-    // for (int i = 0; i < dp.length - 1; i++) {
-    // for (int j = 0; j < dp[i].length - 1; j++) {
-    // dp[i][j] += mat[i][j];
-    // if (i < dp.length - 1 && j < dp[i].length - 1) {
-    // dp[i][j] += Math.max(dp[i + 1][j], dp[i][j + 1]);
-    // }
-    // if (i < dp.length - 1) {
-    // dp[i][j] += dp[i + 1][j];
-    // } else if (j < dp[i].length - 1) {
-    // dp[i][j] += dp[i][j + 1];
-    // }
-    // }
-    // }
-
-    // return dp[dp.length - 1][dp[0].length - 1];
-    // }
-
-    public static int maxPathSum(int[][] mat) {
+    public static int findMaxPath(int[][] mat) {
         int rows = mat.length;
         int cols = mat[0].length;
         int rock = -1;
+
+        // base code to check null
         if (rows == 0) {
             return 0;
         }
 
+        // create a Dynamic Programming matrix with same size as original matrix
         int[][] dp = new int[rows][cols];
         dp[0][0] = mat[0][0];
 
-        // fill first row
+        // fill first row of dp with the max cost
+        // if the pointer meet a rock, the remaining cell after that rock are treated as
+        // rock as well
         for (int i = 1; i < cols; i++) {
             if (mat[0][i] == rock || dp[0][i - 1] == rock) {
-                dp[0][i] = -1;
+                dp[0][i] = rock;
             } else {
                 dp[0][i] = dp[0][i - 1] + mat[0][i];
             }
         }
 
-        // fill first column
+        // continue filling the first column with the same approach with first row
         for (int j = 1; j < rows; j++) {
             if (mat[j][0] == rock || dp[j - 1][0] == rock) {
-                dp[j][0] = -1;
+                dp[j][0] = rock;
             } else {
                 dp[j][0] = dp[j - 1][0] + mat[j][0];
             }
         }
 
+        // fill remaining cell with values from above first row and column
+        //
         for (int i = 1; i < rows; i++) {
             for (int j = 1; j < cols; j++) {
+
+                // for cell in matrix which is not rock
+                // check whether the previous left cell AND the previous up cell is rock
+                // if yes, fill that dp cell as rock
+                // if no, fill dp cell with max cost from both previous left and up cell
                 if (mat[i][j] != rock) {
                     if (dp[i - 1][j] == rock && dp[i][j - 1] == rock) {
-                        dp[i][j] = -1;
+                        dp[i][j] = rock;
                     } else {
-                        dp[i][j] = mat[i][j] + printMax(dp[i][j - 1], dp[i - 1][j]);
+                        dp[i][j] = mat[i][j] + Math.max(dp[i - 1][j], dp[i][j - 1]);
                     }
-                } else {
-                    dp[i][j] = -1;
+                }
+                // if cell in matrix is rock, fill dp cell as rock too
+                else {
+                    dp[i][j] = rock;
                 }
             }
         }
@@ -137,23 +91,12 @@ public class MaxPathSum {
                     row++;
                     line = br.readLine();
                 }
-                // displayMap(map);
                 return map;
             }
         } finally {
             br.close();
         }
         return null;
-    }
-
-    static int printMax(int right, int down) {
-        if (right > down) {
-            System.out.println("-R" + right);
-        } else {
-            System.out.println("-D" + down);
-        }
-
-        return Math.max(right, down);
     }
 
     public static int[][] parseIntMap(String[][] map) {
@@ -180,14 +123,12 @@ public class MaxPathSum {
 
     public static void main(String[] args) {
         try {
-            String[][] map = parseMap("27_27.txt");
+            String[][] map = parseMap("3_3.txt");
             int[][] mat = parseIntMap(map);
             displayMat(mat);
 
-            int row = mat.length;
-            int col = mat[0].length;
             System.out.println(Arrays.deepToString(mat).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
-            System.out.println(maxPathSum(mat));
+            System.out.println(findMaxPath(mat));
         } catch (IOException e) {
             System.out.println(e);
             e.printStackTrace();

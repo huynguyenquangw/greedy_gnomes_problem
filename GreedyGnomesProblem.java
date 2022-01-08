@@ -16,23 +16,17 @@ public class GreedyGnomesProblem {
         String rock = "-1";
         // return last cell
         if (i == rows - 1 && j == cols - 1 && !grid[i][j].equals("-1")) {
-            // System.out.println("last cell " + grid[i][j]);
             return Integer.parseInt(grid[i][j]);
         }
 
         if (i < rows - 1 && j < cols - 1 && !grid[i][j].equals("-1")) {
-            // System.out.println("all possible cell " + grid[i][j]);
-            // System.out.println(parseInt(grid[i][j]) + dfs(i + 1, j, grid));
             int r1 = Integer.parseInt(grid[i][j]) + dfs(i + 1, j, grid);
             int r2 = Integer.parseInt(grid[i][j]) + dfs(i, j + 1, grid);
 
-            // System.out.println(Math.max(r1, r2));
             return Math.max(r1, r2);
         }
 
         if (i < rows - 1 && !grid[i][j].equals("-1")) {
-
-            // System.out.println("down cell " + grid[i][j]);
             return Integer.parseInt(grid[i][j]) + dfs(i + 1, j, grid);
         }
 
