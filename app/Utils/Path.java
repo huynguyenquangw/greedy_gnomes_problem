@@ -53,25 +53,6 @@ public class Path {
     //     return path;
     // }
 
-    public static void printDirection(ArrayList<Pair> array) {
-        ArrayList<String> path = new ArrayList<String>();
-        Pair prevPair = array.get(0);
-
-        for (int i = 1; i < array.size(); i++) {
-            Pair curPair = array.get(i);
-            if (curPair.x > prevPair.x) {
-                path.add("D");
-                prevPair = curPair;
-            } else if (curPair.y > prevPair.y) {
-                path.add("R");
-                prevPair = curPair;
-            }
-        }
-        System.out.println(path);
-        System.out.println();
-
-    }
-
     /* OK */
     public static ArrayList<Pair> getResult(List<ArrayList<Pair>> myPathList, int[][] grid){
         List<ArrayList<Pair>> allPathsHaveMaxGolds = new ArrayList<ArrayList<Pair>>();
@@ -97,9 +78,11 @@ public class Path {
                 path = allPathsHaveMaxGolds.get(i);
             }
         }
-        System.out.println();
-        System.out.println(path);
+        System.out.println("------------------------------------------------------------------");
         System.out.println("Golds: " + maxGolds + " | " + "Steps: " + minSteps);
+        printDirection(path);
+        System.out.println(path);
+        System.out.println("------------------------------------------------------------------");
         return path;
     }
 
@@ -140,5 +123,22 @@ public class Path {
         }
         // return the new list
         return newList;
+    }
+
+    public static void printDirection(ArrayList<Pair> array) {
+        ArrayList<String> path = new ArrayList<String>();
+        Pair prevPair = array.get(0);
+
+        for (int i = 1; i < array.size(); i++) {
+            Pair curPair = array.get(i);
+            if (curPair.x > prevPair.x) {
+                path.add("D");
+                prevPair = curPair;
+            } else if (curPair.y > prevPair.y) {
+                path.add("R");
+                prevPair = curPair;
+            }
+        }
+        System.out.println(path);
     }
 }
