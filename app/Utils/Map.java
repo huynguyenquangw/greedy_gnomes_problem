@@ -37,9 +37,18 @@ public class Map {
         }
         return null;
     }
-    
-    public static void displayMap(String[][] map){
-        System.out.println(Arrays.deepToString(map).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
 
+    public static int[][] parseIntMap(String[][] map) {
+        int[][] mat = new int[map.length][map[0].length];
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
+                mat[i][j] = Integer.parseInt(map[i][j]);
+            }
+        }
+        return mat;
+    }
+    
+    public static void displayMap(int[][] map){
+        System.out.println(Arrays.deepToString(map).replace("], ", "]\n").replace("[[", "[").replace("]]", "]"));
     }
 }
