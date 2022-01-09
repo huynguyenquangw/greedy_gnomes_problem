@@ -1,12 +1,20 @@
-import java.io.FileReader;
+package app;
+
 import java.util.ArrayList;
 import java.util.Collections;
+
+import app.model.Pair;
+import app.Utils.Map;
+
 import java.io.IOException;
-import java.io.BufferedReader;
 
 public class DynamicProgramming {
 
-    public static int[][] findMaxPath(int[][] mat) {
+    /***
+     * @param matrix
+     * @return a filled matrix with max cost value from starting point to each cell
+     */
+    public static int[][] fillDP(int[][] mat) {
         int rows = mat.length;
         int cols = mat[0].length;
         int rock = -1;
@@ -41,7 +49,6 @@ public class DynamicProgramming {
         }
 
         // fill remaining cell with values from above first row and column
-        //
         for (int i = 1; i < rows; i++) {
             for (int j = 1; j < cols; j++) {
 
@@ -67,36 +74,20 @@ public class DynamicProgramming {
         return dp;
     }
 
-    public static class Pair {
-        Integer x, y;
-
-        public Pair() {
-        }
-
-        public Pair(Integer x, Integer y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        public Integer getX() {
-            return x;
-        }
-
-        public Integer getY() {
-            return y;
-        }
-
-        public String toString() {
-            return x + "," + y + " ";
-        }
-    }
-
+    /**
+     * 
+     * @param matrix
+     * @return a Pair of coordinates in matrix, that has the max cost value from
+     *         starting point of matrix
+     */
     public static Pair findMaxCord(int[][] mat) {
 
         int max = mat[0][0];
-
         Pair maxCord = new Pair();
 
+        // Loop through the matrix
+        // Finding the max value cell
+        // Set row cord of cell is x of Pair, column crod of cell is y of Pair
         for (int i = 0; i < mat.length; i++) {
             for (int j = 0; j < mat[i].length; j++) {
                 if (mat[i][j] >= max) {
@@ -110,75 +101,56 @@ public class DynamicProgramming {
         return maxCord;
     }
 
-    public static String[][] parseMap(String fileName) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
-        try {
-            String line = br.readLine();
-            String[] mapSize;
-            int row = 0;
-            if (line != null) {
-                mapSize = line.split(" ");
-                String[][] map = new String[Integer.parseInt(mapSize[0])][Integer.parseInt(mapSize[1])];
-                line = br.readLine();
-                while (line != null) {
-                    int column = 0;
-                    for (String character : line.replace("X", "-1").replace(".", "0").split(" ")) {
-                        map[row][column] = character;
-                        column++;
-                    }
-                    row++;
-                    line = br.readLine();
-                }
-                return map;
-            }
-        } finally {
-            br.close();
-        }
-        return null;
-    }
-
-    public static int[][] parseIntMap(String[][] map) {
-        int[][] mat = new int[map.length][map[0].length];
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[i].length; j++) {
-                mat[i][j] = Integer.parseInt(map[i][j]);
-            }
-        }
-        return mat;
-    }
-
-    static void displayMat(int[][] mat) {
-        for (int i = 0; i < mat.length; i++) {
-            for (int j = 0; j < mat[i].length; j++) {
-                System.out.print(mat[i][j]);
-            }
-            System.out.println();
-
-        }
-    }
-
+    /**
+     * Printing the path from starting point to the max gold cell
+     * Backtracking from the max gold cell to starting point, recording the steps
+     * and directions
+     * 
+     * @param maxCord
+     * @param matrix
+     */
     public static void printPath(Pair maxCord, int[][] mat) {
+        ArrayList<Pair> path = new ArrayList<>();
         int i = maxCord.x, j = maxCord.y;
-        System.out.println("Golds: " + mat[i][j]);
-        ArrayList<Pair> pathCord = new ArrayList<>();
 
-        pathCord.add(new Pair(i, j));
+        System.out.println("Golds: " + mat[i][j]);
+
+        // Adding the max gold cell into path first
+        path.add(new Pair(i, j));
+
+        // Reverse loop
         while (i > 0 && j > 0) {
+
+            // if previous up cell cost is greater than previous left cell cost
+            // adding that coordinates into path
             if (mat[i - 1][j] >= mat[i][j - 1]) {
-                pathCord.add(new Pair(i - 1, j));
+                path.add(new Pair(i - 1, j));
                 i -= 1;
             } else {
-                pathCord.add(new Pair(i, j - 1));
+                path.add(new Pair(i, j - 1));
                 j -= 1;
             }
         }
-        pathCord.add(new Pair(0, 0));
-        reverseArrayList(pathCord);
 
-        System.out.println("Steps: " + pathCord.size());
-        printDirection(pathCord);
+        // Adding the starting point coordinates
+        path.add(new Pair(0, 0));
+
+        // Due to backtracking, path is needed to reverse in right order
+        reverseArrayList(path);
+
+        // Steps as the path size
+        System.out.println("Steps: " + path.size());
+
+        printDirection(path);
     }
 
+    /**
+     * From the path of coordinates pair, print out the direction moving in the gold
+     * map
+     * Compare next to cell coordinates to calculate Right or Down directions
+     * 
+     * @param path
+     */
     public static void printDirection(ArrayList<Pair> array) {
         ArrayList<String> path = new ArrayList<String>();
         Pair prevPair = array.get(0);
@@ -197,26 +169,56 @@ public class DynamicProgramming {
         System.out.println(path);
     }
 
+    /**
+     * Using Collections to reverse ArrayList order
+     * 
+     * @param array
+     * @return
+     */
     public static ArrayList<Pair> reverseArrayList(ArrayList<Pair> array) {
         Collections.reverse(array);
         return array;
     }
 
-    public static void main(String[] args) {
-        try {
-            String[][] map = parseMap("25_8.txt");
-            int[][] mat = parseIntMap(map);
+    static void displayMat(int[][] mat) {
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[i].length; j++) {
+                System.out.print(mat[i][j]);
+            }
+            System.out.println();
 
-            // start time
-            int[][] dp = findMaxPath(mat);
+        }
+    }
+
+    public static void main(String[] args) {
+        long startTime = System.nanoTime();
+
+        try {
+
+            // Map input processing and validation
+            String[][] map = Map.parseMap("./app/maps/19_19.txt");
+
+            // Processing input map to int[][] mat
+            int[][] mat = Map.parseIntMap(map);
+            Map.displayMap(mat);
+
+            // Using DP to fill in input matrix with max cost values
+            int[][] dp = fillDP(mat);
+
+            // Figure out the max cost coordinates in dp matrix
             Pair maxCord = findMaxCord(dp);
+
+            // Backtracking from the max cost coordinates to starting point
+            // Print out the path that have the most mined golds.
             printPath(maxCord, dp);
 
-            // end time
         } catch (IOException e) {
             System.out.println(e);
             e.printStackTrace();
         }
+
+        long stopTime = System.nanoTime();
+        System.out.println("Running time: " + (stopTime - startTime));
     }
 
 }
