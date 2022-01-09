@@ -5,6 +5,7 @@ import java.util.Collections;
 
 import app.model.Pair;
 import app.Utils.Map;
+import app.Utils.Path;
 
 import java.io.IOException;
 
@@ -141,32 +142,7 @@ public class DynamicProgramming {
         // Steps as the path size
         System.out.println("Steps: " + path.size());
 
-        printDirection(path);
-    }
-
-    /**
-     * From the path of coordinates pair, print out the direction moving in the gold
-     * map
-     * Compare next to cell coordinates to calculate Right or Down directions
-     * 
-     * @param path
-     */
-    public static void printDirection(ArrayList<Pair> array) {
-        ArrayList<String> path = new ArrayList<String>();
-        Pair prevPair = array.get(0);
-
-        for (int i = 1; i < array.size(); i++) {
-            Pair curPair = array.get(i);
-            if (curPair.x > prevPair.x) {
-                path.add("D");
-                prevPair = curPair;
-            } else if (curPair.y > prevPair.y) {
-                path.add("R");
-                prevPair = curPair;
-            }
-        }
-
-        System.out.println(path);
+        Path.printDirection(path);
     }
 
     /**
@@ -191,12 +167,13 @@ public class DynamicProgramming {
     }
 
     public static void main(String[] args) {
+        System.out.println("\nStarting Dynamic Programming...\n");
         long startTime = System.nanoTime();
 
         try {
 
             // Map input processing and validation
-            String[][] map = Map.parseMap("./app/maps/19_19.txt");
+            String[][] map = Map.parseMap("./app/maps/10_10.txt");
 
             // Processing input map to int[][] mat
             int[][] mat = Map.parseIntMap(map);
