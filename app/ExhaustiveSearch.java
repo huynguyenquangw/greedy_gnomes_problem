@@ -10,11 +10,12 @@ import app.model.Pair;
 
 public class ExhaustiveSearch {
     public static void main(String[] args) throws IOException{
-        String[][] map = Map.parseMap("./app/maps/19_19.txt");
-        int[][] intMap = Map.parseIntMap(map);
+        // add map txt file
+        String[][] map = Map.parseMap("./app/maps/3_3.txt"); // parse to String map
+        int[][] intMap = Map.parseIntMap(map); // parse to int map
 
-        Map.displayMap(intMap);
-        ArrayList<Pair> myResult = Path.getMinimalPathHasMaxGolds(intMap);
-        Path.displayResult(myResult, intMap);
+        Map.displayMap(intMap); // display map
+        ArrayList<Pair> myResult = Path.getMinimalPathHasMaxGolds(intMap); // get the result path (contain coordinates)
+        Path.displayResult(myResult, intMap); // display result(golds, steps, direction)
     }
 }

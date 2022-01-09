@@ -37,7 +37,7 @@ public class Path {
         return minimalPath;
     }
 
-        // Function to get all paths have maximum amount of gold they can find
+    // Function to get all paths have maximum amount of gold they can find
     public static List<ArrayList<Pair>> getAllPathsHaveMaxGolds(int[][] grid){
         List<ArrayList<Pair>> pathList = findAllPaths(grid);
         List<ArrayList<Pair>> allPathsHaveMaxGolds = new ArrayList<ArrayList<Pair>>();
@@ -56,6 +56,7 @@ public class Path {
     }
 
     /* -------------------------------------- Recursive functions -------------------------------------- */
+    // Function to find all paths after recursive
     public static List<ArrayList<Pair>> findAllPaths(int[][] grid){
         List<ArrayList<Pair>> allPaths = new ArrayList<ArrayList<Pair>>();
 
@@ -64,6 +65,7 @@ public class Path {
         return allPaths;
     }
 
+    // Recursive function to find all paths
     public static void findPathRecursive(int x, int y, int[][] grid, String path, List<ArrayList<Pair>> allPaths){
         /* (x, y) is coordinates of the POINTER */
         /* x: current row                       */
@@ -73,44 +75,48 @@ public class Path {
         int rows = grid.length;     // rows of the grid
         int cols = grid[0].length;  // columns of the grid
 
-        // Pointer hits the WALL on the right
+        // Pointer hits the WALL on the right -> then go top-down only
         if(y == cols - 1){
             for (int i = x; i <= rows - 1; i++) {
                 // Pointer hits the ROCK
                 if (grid[i][y] == ROCK) {
+                    // Add the path to path list
                     allPaths.add(Path.convertStringPathToArrayList(path));
                     return; // hits the ROCK -> finish
                 }              
-                path += i + "," + y + " "; // Append coordinates
+                path += i + "," + y + " "; // Append coordinates to string
             }
-            // Add the path path list
+            // Add the path to path list
             allPaths.add(Path.convertStringPathToArrayList(path));
             
             return;
         }
 
-        // Pointer hits the WALL on the bottom
+        // Pointer hits the WALL on the bottom -> then go left-right only
         if(x == rows - 1){
             for (int i = y; i <= cols - 1; i++) {
                 if (grid[x][i] == ROCK) {
+                    // Add the path to path list
                     allPaths.add(Path.convertStringPathToArrayList(path));
                     return; // hits the ROCK -> finish
                 }
-                path += x + "," + i + " "; // Append coordinates
+                path += x + "," + i + " "; // Append coordinates to string
             }
-            // Add the path path list
+            // Add the path to path list
             allPaths.add(Path.convertStringPathToArrayList(path));
             return;
         }
         
-        // Pointer hits the ROCK in normal move
-        if (grid[x][y] == ROCK) {        
+        // Pointer hits the ROCK during normal move
+        if (grid[x][y] == ROCK) {       
+            // Add the path to path list 
             allPaths.add(Path.convertStringPathToArrayList(path));
             return; // got the ROCK -> finish
         }
+
         // Append coordinates to the path
         path += x + "," + y + " ";
-        // Normal move recursive
+        // Normal move
         findPathRecursive(x + 1, y, grid, path, allPaths);
         findPathRecursive(x, y + 1, grid, path, allPaths);
     }
@@ -119,7 +125,7 @@ public class Path {
     public static ArrayList<Pair> convertStringPathToArrayList(String path){
         ArrayList<Pair> newPath = new ArrayList<Pair>();
 
-        // list of pair 
+        // list of all pairs of path
         List<String> pairList = new ArrayList<String>(Arrays.asList(path.split(" ")));
         for(String pair : pairList){
             String[] xy = pair.split(",");
